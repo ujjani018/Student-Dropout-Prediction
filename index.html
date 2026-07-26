@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Dropout Prediction System</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+
+min-height:100vh;
+background:linear-gradient(135deg,#667eea,#764ba2);
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+
+}
+
+.container{
+
+width:520px;
+background:white;
+padding:35px;
+border-radius:20px;
+box-shadow:0 15px 35px rgba(0,0,0,.2);
+
+}
+
+.header{
+
+text-align:center;
+margin-bottom:25px;
+
+}
+
+.header h1{
+
+color:#2c3e50;
+font-size:28px;
+
+}
+
+.header p{
+
+margin-top:8px;
+color:#666;
+
+}
+
+.input-box{
+
+margin-bottom:18px;
+
+}
+
+label{
+
+display:block;
+margin-bottom:6px;
+font-weight:600;
+color:#2c3e50;
+
+}
+
+input{
+
+width:100%;
+padding:13px;
+border:1px solid #ddd;
+border-radius:10px;
+font-size:15px;
+
+}
+
+input:focus{
+
+outline:none;
+border-color:#667eea;
+
+}
+
+button{
+
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+font-size:17px;
+font-weight:bold;
+background:linear-gradient(135deg,#667eea,#764ba2);
+color:white;
+cursor:pointer;
+transition:.3s;
+
+}
+
+button:hover{
+
+transform:scale(1.03);
+
+}
+
+.download-btn{
+
+margin-top:15px;
+background:#1e88e5;
+
+}
+
+.download-btn:hover{
+
+background:#1565c0;
+
+}
+
+.result{
+
+margin-top:25px;
+padding:20px;
+background:#f4f6ff;
+border-radius:15px;
+text-align:center;
+
+}
+
+.confidence{
+
+margin-top:12px;
+font-size:18px;
+font-weight:bold;
+
+}
+
+.advice{
+
+margin-top:15px;
+padding:12px;
+background:#fff3cd;
+border-radius:10px;
+
+}
+
+.report{
+
+margin-top:20px;
+padding:20px;
+background:white;
+border-left:5px solid #667eea;
+border-radius:12px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.report h3{
+
+margin-bottom:12px;
+color:#2c3e50;
+
+}
+
+.report p{
+
+margin:8px 0;
+
+}
+
+.report ul{
+
+padding-left:20px;
+
+}
+
+.report li{
+
+margin:8px 0;
+
+}
+
+.info{
+
+margin-top:20px;
+background:#f4f6ff;
+padding:15px;
+border-radius:12px;
+
+}
+
+.about{
+
+margin-top:20px;
+padding:15px;
+background:#f8f9ff;
+border-radius:12px;
+text-align:center;
+
+}
+
+.footer{
+
+margin-top:15px;
+text-align:center;
+font-size:13px;
+color:#777;
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+
+<h1>🎓 Student Dropout Prediction</h1>
+
+<p>AI Based Student Performance Analysis System</p>
+
+</div>
+
+<form action="/predict" method="POST">
+
+<div class="input-box">
+
+<label>Attendance Percentage</label>
+
+<input
+type="number"
+name="attendance"
+placeholder="Enter Attendance (%)"
+min="0"
+max="100"
+value="{{ attendance if attendance else '' }}"
+required>
+
+</div>
+
+<div class="input-box">
+
+<label>Current CGPA</label>
+
+<input
+type="number"
+step="0.1"
+name="cgpa"
+placeholder="Enter CGPA"
+min="0"
+max="10"
+value="{{ cgpa if cgpa else '' }}"
+required>
+
+</div>
+
+<div class="input-box">
+
+<label>Number of Backlogs</label>
+
+<input
+type="number"
+name="backlogs"
+placeholder="Enter Backlogs"
+min="0"
+value="{{ backlogs if backlogs else '' }}"
+required>
+
+</div>
+
+<div class="input-box">
+
+<label>Daily Study Hours</label>
+
+<input
+type="number"
+step="0.5"
+name="study_hours"
+placeholder="Study Hours Per Day"
+min="0"
+max="24"
+value="{{ study_hours if study_hours else '' }}"
+required>
+
+</div>
+
+<button type="submit">
+
+🔍 Predict Student Risk
+
+</button>
+
+</form>
+{% if prediction %}
+
+<div class="result">
+
+<h2>{{ prediction }}</h2>
+
+{% if confidence %}
+
+<div class="confidence">
+
+📊 Confidence Score : <b>{{ confidence }}%</b>
+
+</div>
+
+{% endif %}
+
+{% if advice %}
+
+<div class="advice">
+
+💡 {{ advice }}
+
+</div>
+
+{% endif %}
+
+</div>
+
+
+<div class="report">
+
+<h3>📄 Student Report</h3>
+
+<p><b>Attendance :</b> {{ attendance }}%</p>
+
+<p><b>CGPA :</b> {{ cgpa }}</p>
+
+<p><b>Backlogs :</b> {{ backlogs }}</p>
+
+<p><b>Study Hours :</b> {{ study_hours }} Hours/Day</p>
+
+<p><b>Prediction :</b> {{ prediction }}</p>
+
+{% if confidence %}
+
+<p><b>Confidence :</b> {{ confidence }}%</p>
+
+{% endif %}
+
+<p><b>Generated On :</b> {{ time }}</p>
+
+</div>
+
+
+{% if suggestions %}
+
+<div class="report">
+
+<h3>💡 Improvement Suggestions</h3>
+
+<ul>
+
+{% for item in suggestions %}
+
+<li>{{ item }}</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+{% endif %}
+
+
+<a href="/download_report">
+
+<button class="download-btn">
+
+📄 Download Student Report (PDF)
+
+</button>
+
+</a>
+
+{% endif %}
+<div class="info">
+
+<h3>📊 Prediction Factors</h3>
+
+<ul>
+
+<li>✔ Attendance Percentage</li>
+
+<li>✔ Academic Performance (CGPA)</li>
+
+<li>✔ Number of Backlogs</li>
+
+<li>✔ Daily Study Hours</li>
+
+</ul>
+
+</div>
+
+
+<div class="about">
+
+<h3>🤖 About Project</h3>
+
+<p>
+
+This AI-based Student Dropout Prediction System uses a Machine Learning model
+to analyze a student's academic performance and estimate the likelihood of
+dropping out. The prediction is based on key academic factors such as
+attendance, CGPA, backlog count, and daily study hours. The system also
+provides personalized suggestions and allows users to download a detailed
+prediction report in PDF format.
+
+</p>
+
+</div>
+
+
+<div class="footer">
+
+© 2026 Student Dropout Prediction System <br>
+
+Developed using Flask • Python • Machine Learning
+
+</div>
+
+</div>
+
+</body>
+
+</html>
